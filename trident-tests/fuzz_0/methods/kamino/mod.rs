@@ -5,6 +5,7 @@ pub mod utils;
 use trident_fuzz::fuzzing::*;
 
 use crate::constants;
+use crate::constants::WITHDRAW_ALL_FLAG;
 use crate::invariants;
 use crate::types;
 use crate::FuzzTest;
@@ -113,10 +114,6 @@ impl FuzzTest {
             reserve_liquidity_supply,
             reserve_collateral_mint,
             reserve_collateral_supply_vault,
-            types::marginfi::program_id(),
-            types::marginfi::program_id(),
-            types::marginfi::program_id(),
-            constants::SCOPE_PRICES,
             obligation_farm_user_state,
             farm_state,
             *mint_data.owner(),
@@ -170,7 +167,7 @@ impl FuzzTest {
         let obligation_farm_user_state = self.get_famrs_user_state_address(farm_state, obligation);
 
         let deposit_ix = types::marginfi::KaminoDepositInstruction::data(
-            types::marginfi::KaminoDepositInstructionData::new(amount),
+            types::marginfi::KaminoDepositInstructionData::new(amount, Some(false)),
         )
         .accounts(types::marginfi::KaminoDepositInstructionAccounts::new(
             self.marginfi_group,
@@ -256,7 +253,7 @@ impl FuzzTest {
         farm_state: Pubkey,
         scope_prices: Option<Pubkey>,
         amount: u64,
-        withdraw_all: Option<bool>,
+        flags: Option<u8>,
         message: Option<&str>,
     ) {
         let mint_data = self.trident.get_account(&mint);
@@ -290,7 +287,7 @@ impl FuzzTest {
             self.remaining_accounts_for_bank_risk_and_t22_transfer(mint, *mint_data.owner(), banks);
 
         let withdraw_ix = types::marginfi::KaminoWithdrawInstruction::data(
-            types::marginfi::KaminoWithdrawInstructionData::new(amount, withdraw_all),
+            types::marginfi::KaminoWithdrawInstructionData::new(amount, flags),
         )
         .accounts(types::marginfi::KaminoWithdrawInstructionAccounts::new(
             self.marginfi_group,
@@ -326,7 +323,7 @@ impl FuzzTest {
         let collateral_src_after =
             invariants::token_balance(&mut self.trident, reserve_collateral_supply_vault);
 
-        let withdraw_all_flag = withdraw_all.unwrap_or(false);
+        let withdraw_all_flag = flags.unwrap_or(0) & WITHDRAW_ALL_FLAG != 0;
         let liquidity_received = user_after.saturating_sub(user_before);
 
         if res.is_success() {

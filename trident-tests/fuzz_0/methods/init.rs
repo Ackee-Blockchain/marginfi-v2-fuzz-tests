@@ -494,6 +494,13 @@ impl FuzzTest {
     }
 
     fn usdc_bank_config() -> BankConfigCompact {
+        let p0 = RatePoint::new(2_147_483_648, 8_589_935);
+        let p1 = RatePoint::new(3_435_973_836, 17_179_869);
+        let p2 = RatePoint::new(3_865_470_566, 21_474_836);
+        let p3 = RatePoint::new(4_080_218_930, 32_212_255);
+        let p4 = RatePoint::new(4_209_067_949, 42_949_673);
+
+        let points = [p0, p1, p2, p3, p4];
         BankConfigCompact::new(
             // https://solscan.io/account/2s37akK2eyBbp8DZgCm7RtsaEz8eJP3Nxd4urLHQv7yB#accountData
             wrap_i80f48(I80F48!(1.0)),
@@ -509,8 +516,8 @@ impl FuzzTest {
                 wrap_i80f48(I80F48!(0.0)),
                 wrap_i80f48(I80F48!(0.0)),
                 0,
-                0,
-                [RatePoint::new(0, 0); 5],
+                64_424_509,
+                points,
             ),
             BankOperationalState::Operational,
             200_000_000_000_000,
@@ -525,6 +532,13 @@ impl FuzzTest {
     }
 
     fn eth_bank_config() -> BankConfigCompact {
+        let p0 = RatePoint::new(3_435_973_836, 42_949_672);
+        let p1 = RatePoint::new(0, 0);
+        let p2 = RatePoint::new(0, 0);
+        let p3 = RatePoint::new(0, 0);
+        let p4 = RatePoint::new(0, 0);
+
+        let points = [p0, p1, p2, p3, p4];
         BankConfigCompact::new(
             // https://solscan.io/account/BkUyfXjbBBALcfZvw76WAFRvYQ21xxMWWeoPtJrUqG3z#accountData
             wrap_i80f48(I80F48!(0.5)),
@@ -539,8 +553,8 @@ impl FuzzTest {
                 wrap_i80f48(I80F48!(0.0)),
                 wrap_i80f48(I80F48!(0.0)),
                 0,
-                0,
-                [RatePoint::new(0, 0); 5],
+                1_288_490_188,
+                points,
             ),
             BankOperationalState::Operational,
             u64::MAX / 4,
@@ -555,6 +569,13 @@ impl FuzzTest {
     }
 
     fn btc_bank_config() -> BankConfigCompact {
+        let p0 = RatePoint::new(3_435_973_836, 42_949_672);
+        let p1 = RatePoint::new(0, 0);
+        let p2 = RatePoint::new(0, 0);
+        let p3 = RatePoint::new(0, 0);
+        let p4 = RatePoint::new(0, 0);
+
+        let points = [p0, p1, p2, p3, p4];
         BankConfigCompact::new(
             // Mainnet-style BTC weights from WrappedI80F48 LE bytes:
             // asset init 00..80.. (0.5), asset maint 66..a6.. (~0.65),
@@ -572,8 +593,8 @@ impl FuzzTest {
                 wrap_i80f48(I80F48!(0.0)),
                 wrap_i80f48(I80F48!(0.0)),
                 0,
-                0,
-                [RatePoint::new(0, 0); 5],
+                1_288_490_188,
+                points,
             ),
             BankOperationalState::Operational,
             u64::MAX / 4,

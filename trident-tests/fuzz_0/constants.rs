@@ -13,6 +13,7 @@ pub const FEE_VAULT_AUTHORITY_SEED: &str = "fee_vault_auth";
 pub const FEE_VAULT_SEED: &str = "fee_vault";
 pub const KLEND_LENDING_MARKET_AUTH: &[u8] = b"lma";
 pub const KFARMS_BASE_SEED_USER_STATE: &[u8; 4] = b"user";
+pub const WITHDRAW_ALL_FLAG: u8 = 1 << 0;
 // ================================================================================================
 // Mints
 // ================================================================================================
